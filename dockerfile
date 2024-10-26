@@ -24,4 +24,4 @@ COPY . .
 EXPOSE $PORT
 
 # Command to run the application
-CMD [ "nodemon", "index.js" ]
+CMD [ "node", "index.js" ]

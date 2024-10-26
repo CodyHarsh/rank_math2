@@ -40,10 +40,10 @@ class SummaryController {
     static async getJob(req, res) {
         try {
             const { id } = req.params;
-            const summary = await Summary.findById(id);
 
+            const summary = await Summary.findById(id);
             if (!summary) {
-                return res.status(404).json({ error: 'Job not found' });
+                return res.status(404).json({ error: `Request ID ${id} does not exist. You have provided wrong request id` });
             }
 
             return res.json({
@@ -55,7 +55,7 @@ class SummaryController {
             });
         } catch (error) {
             logger.error('Error fetching job:', error);
-            return res.status(500).json({ error: 'Internal server error' });
+            return res.status(500).json({ error: 'Request Id Nnot Found' });
         }
     }
 

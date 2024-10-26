@@ -171,7 +171,7 @@ The application follows a modular architecture with clear separation of concerns
    ```
    curl:
    ```
-   curl --location 'https://rank-math2.onrender.com/api/summary/671c895d760ec7e0c60de0b5' \
+   curl --location 'https://rank-math2.onrender.com/api/summary/671d0bef22b9a5cae871a278' \
    --header 'Content-Type: application/json' \
    --data ''
    ```

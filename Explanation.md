@@ -2,6 +2,9 @@
 
 This project is a web service that scrapes web pages and generates summaries using the Llama language model through HuggingFace's API. It provides an asynchronous API interface for submitting URLs and retrieving their summaries.
 
+## Frontend Live (React.js) ->Vercel:   https://rank-math2-ui.vercel.app/
+## Backend Live Link (Node.js) -> Render: https://rank-math2.onrender.com (It may take some time to start because it is running on a free instance.)
+
 ## Project Structure
 
 ```

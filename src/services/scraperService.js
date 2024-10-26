@@ -3,7 +3,20 @@ import logger from '../utils/logger.js';
 
 class ScraperService {
     async scrapeUrl(url) {
-        let browser = null;
+        let browser = await puppeteer.launch({
+            args: [
+              "--disable-setuid-sandbox",
+              "--no-sandbox",
+              "--single-process",
+              "--no-zygote",
+            ],
+            executablePath:
+              // eslint-disable-next-line no-undef
+              process.env.NODE_ENV === "production"
+                // eslint-disable-next-line no-undef
+                ? process.env.PUPPETEER_EXECUTABLE_PATH
+                : puppeteer.executablePath(),
+          });
         try {
             // Validate URL format
             try {

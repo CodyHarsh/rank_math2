@@ -89,7 +89,7 @@ class SummaryController {
             logger.error('Scraping failed:', scrapeError);
             await Summary.findByIdAndUpdate(jobId, {
                 status: 'failed',
-                error_message: scrapeError.message
+                error_message: `Scrapping failed because website address may be wrong or it may have high security. Here is the error message: ${scrapeError.message} `
             });
         }
     }

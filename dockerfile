@@ -1,5 +1,21 @@
-# Use the Puppeteer image as the base
-FROM ghcr.io/puppeteer/puppeteer:23.6.0
+FROM node:18.13.0
+
+# Install necessary dependencies and Chrome
+RUN apt-get update && \
+    apt-get install -y \
+    python \
+    make \
+    gcc \
+    g++ \
+    gnupg \
+    wget
+
+# Install Google Chrome
+RUN wget --quiet --output-document=- https://dl-ssl.google.com/linux/linux_signing_key.pub | gpg --dearmor > /etc/apt/trusted.gpg.d/google-archive.gpg && \
+    sh -c 'echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google.list' && \
+    apt-get update && \
+    apt-get install google-chrome-stable -y --no-install-recommends && \
+    rm -rf /var/lib/apt/lists/*
 
 # Set environment variables
 ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true \
@@ -8,13 +24,13 @@ ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true \
     HUGGINGFACE_TOKEN=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 \
     PORT=3001
 
-# Set the working directory
-WORKDIR /usr/src/app
+# Create app user and group
+RUN groupadd -r app && useradd -rm -g app -G audio,video app
 
-# Switch to root to handle permissions
-USER root
+# Set working directory
+WORKDIR /home/app
 
-# Copy package files first
+# Copy package files
 COPY package*.json ./
 
 # Install dependencies
@@ -23,14 +39,15 @@ RUN npm install --legacy-peer-deps --no-cache
 # Copy the rest of the application code
 COPY . .
 
-# Set permissions for the entire app directory
-RUN chown -R pptruser:pptruser /usr/src/app
+# Set permissions
+RUN chown -R app:app /home/app
+RUN chmod -R 777 /home/app
 
-# Switch to the pptruser (pre-configured in Puppeteer image)
-USER pptruser
+# Switch to app user
+USER app
 
-# Expose the specified port
+# Expose port
 EXPOSE $PORT
 
-# Command to run the application
-CMD [ "node", "index.js" ]
+# Start the application
+CMD ["node", "index.js"]

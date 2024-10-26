@@ -11,11 +11,15 @@ ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true \
 # Set the working directory
 WORKDIR /usr/src/app
 
+# Ensure the puppeteer user has permissions
+RUN chown -R puppeteer:puppeteer /usr/src/app
+USER puppeteer
+
 # Copy package.json and package-lock.json to the container
 COPY package*.json ./
 
 # Install dependencies
-RUN npm install
+RUN npm install --legacy-peer-deps --no-cache
 
 # Copy the rest of the application code to the container
 COPY . .

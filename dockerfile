@@ -11,18 +11,23 @@ ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true \
 # Set the working directory
 WORKDIR /usr/src/app
 
-# Ensure the puppeteer user has permissions
-RUN chown -R puppeteer:puppeteer /usr/src/app
-USER puppeteer
+# Switch to root to handle permissions
+USER root
 
-# Copy package.json and package-lock.json to the container
+# Copy package files first
 COPY package*.json ./
 
 # Install dependencies
 RUN npm install --legacy-peer-deps --no-cache
 
-# Copy the rest of the application code to the container
+# Copy the rest of the application code
 COPY . .
+
+# Set permissions for the entire app directory
+RUN chown -R pptruser:pptruser /usr/src/app
+
+# Switch to the pptruser (pre-configured in Puppeteer image)
+USER pptruser
 
 # Expose the specified port
 EXPOSE $PORT

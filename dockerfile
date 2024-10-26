@@ -1,4 +1,4 @@
-FROM node:18.13.0
+FROM node:v20.18.0
 
 # Install dependencies and Chrome
 RUN apt-get update \

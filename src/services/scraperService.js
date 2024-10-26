@@ -3,20 +3,7 @@ import logger from '../utils/logger.js';
 
 class ScraperService {
     async scrapeUrl(url) {
-        let browser = await puppeteer.launch({
-            args: [
-              "--disable-setuid-sandbox",
-              "--no-sandbox",
-              "--single-process",
-              "--no-zygote",
-            ],
-            executablePath:
-              // eslint-disable-next-line no-undef
-              process.env.NODE_ENV === "production"
-                // eslint-disable-next-line no-undef
-                ? process.env.PUPPETEER_EXECUTABLE_PATH
-                : puppeteer.executablePath(),
-          });
+        let browser = null;
         try {
             // Validate URL format
             try {
@@ -27,8 +14,19 @@ class ScraperService {
             }
 
             browser = await puppeteer.launch({
-                headless: 'new'
+                headless: 'new',
+                args: [
+                    "--disable-setuid-sandbox",
+                    "--no-sandbox",
+                    "--single-process",
+                    "--no-zygote",
+                ],
+                executablePath:
+                    process.env.NODE_ENV === "production"
+                        ? process.env.PUPPETEER_EXECUTABLE_PATH
+                        : puppeteer.executablePath(),
             });
+
             const page = await browser.newPage();
             
             // Set timeout for navigation

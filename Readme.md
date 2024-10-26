@@ -8,6 +8,12 @@ This project is a web service that scrapes web pages and generates summaries usi
 ## Frontend UI:
 ![image](https://github.com/user-attachments/assets/3c1029ef-186a-4458-b4ec-b18b8292cdb5)
 
+## Flow:
+![diagram-export-10-26-2024-9_16_38-PM](https://github.com/user-attachments/assets/9e43963a-1fc4-466d-8287-54af8b58f381)
+<img width="430" alt="Screenshot 2024-10-26 at 9 13 42 PM" src="https://github.com/user-attachments/assets/2c1dc0bb-adb2-45df-b913-66cff1ea4538">
+
+
+
 
 ## Project Structure
 

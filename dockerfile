@@ -1,21 +1,14 @@
 FROM node:18.13.0
 
-# Install necessary dependencies and Chrome
-RUN apt-get update && \
-    apt-get install -y \
-    python \
-    make \
-    gcc \
-    g++ \
-    gnupg \
-    wget
-
-# Install Google Chrome
-RUN wget --quiet --output-document=- https://dl-ssl.google.com/linux/linux_signing_key.pub | gpg --dearmor > /etc/apt/trusted.gpg.d/google-archive.gpg && \
-    sh -c 'echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google.list' && \
-    apt-get update && \
-    apt-get install google-chrome-stable -y --no-install-recommends && \
-    rm -rf /var/lib/apt/lists/*
+# Install dependencies and Chrome
+RUN apt-get update \
+    && apt-get install -y wget gnupg \
+    && wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add - \
+    && sh -c 'echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google.list' \
+    && apt-get update \
+    && apt-get install -y google-chrome-stable fonts-ipafont-gothic fonts-wqy-zenhei fonts-thai-tlwg fonts-kacst fonts-freefont-ttf libxss1 \
+    --no-install-recommends \
+    && rm -rf /var/lib/apt/lists/*
 
 # Set environment variables
 ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true \
@@ -24,30 +17,28 @@ ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true \
     HUGGINGFACE_TOKEN=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 \
     PORT=3001
 
-# Create app user and group
-RUN groupadd -r app && useradd -rm -g app -G audio,video app
+# Create working directory
+WORKDIR /usr/src/app
 
-# Set working directory
-WORKDIR /home/app
-
-# Copy package files
+# Copy package files and install as root
 COPY package*.json ./
+RUN mkdir -p /root/.config/puppeteer \
+    && chmod -R 777 /root/.config \
+    && npm install --legacy-peer-deps
 
-# Install dependencies
-RUN npm install --legacy-peer-deps --no-cache
-
-# Copy the rest of the application code
+# Copy application code
 COPY . .
 
-# Set permissions
-RUN chown -R app:app /home/app
-RUN chmod -R 777 /home/app
+# Create and setup pptruser
+RUN groupadd -r pptruser && useradd -r -g pptruser -G audio,video pptruser \
+    && mkdir -p /home/pptruser/Downloads \
+    && chown -R pptruser:pptruser /home/pptruser \
+    && chown -R pptruser:pptruser /usr/src/app \
+    && chown -R pptruser:pptruser /root/.config
 
-# Switch to app user
-USER app
+# Switch to non-root user for runtime
+USER pptruser
 
-# Expose port
 EXPOSE $PORT
 
-# Start the application
 CMD ["node", "index.js"]

@@ -383,3 +383,8 @@ The application follows a modular architecture with clear separation of concerns
 
 
 This architecture and implementation provide a solid foundation for a production-ready application while maintaining flexibility for future enhancements and scaling needs.
+
+![image](https://github.com/user-attachments/assets/3a825606-4619-4754-a7dd-20ac28f23c69)
+![diagram-export-10-26-2024-9_16_38-PM](https://github.com/user-attachments/assets/76c76124-1ed4-4a13-945e-f34a86d5ebc9)
+
+
